@@ -171,5 +171,6 @@ ArrayList 不能像数组这样活着，所以它实现了动态扩容。
 
 ## 目录
 
-- [Collectors](./doc/Collectors.md)
+- [Collectors](./doc/Collectors.md) 【2021.01.04】
 
+- [Function](./doc/Function.md) 【2021.01.04】
