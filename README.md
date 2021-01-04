@@ -169,3 +169,7 @@ ArrayList 不能像数组这样活着，所以它实现了动态扩容。
 
 ## LinkedList
 
+## 目录
+
+- [Collectors](./doc/Collectors.md)
+
