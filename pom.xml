@@ -25,6 +25,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <JavaLib.version>2.1.0.RELEASE</JavaLib.version>
+        <okhttp3.version>4.9.0</okhttp3.version>
     </properties>
 
     <dependencies>
@@ -33,6 +34,14 @@
             <artifactId>JavaLib</artifactId>
             <version>${JavaLib.version}</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp3.version}</version>
+        </dependency>
+
     </dependencies>
 
 
