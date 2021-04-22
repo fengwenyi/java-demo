@@ -1,4 +1,4 @@
-package com.fengwenyi.javademo.threadpoolrejecteddemo;
+package com.fengwenyi.javademo.threadpooldemo;
 
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.RejectedExecutionHandler;

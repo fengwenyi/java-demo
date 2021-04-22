@@ -1,8 +1,9 @@
-package com.fengwenyi.javademo.defaultthreadpooldemo;
+package com.fengwenyi.javademo.threadpooldemo;
 
 import java.util.concurrent.Executors;
 
 /**
+ * 提供的默认线程池
  * @author <a href="https://www.fengwenyi.com">Erwin Feng</a>
  * @since 2021-04-22
  */
