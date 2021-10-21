@@ -196,3 +196,4 @@ ArrayList 不能像数组这样活着，所以它实现了动态扩容。
 - [Collectors](./doc/Collectors.md) 【2021.01.04】
 
 - [Function](./doc/Function.md) 【2021.01.04】
+- [设计模式-责任链模式](./doc/设计模式-责任链模式.md) 【2021.10.21】
