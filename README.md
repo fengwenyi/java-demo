@@ -206,3 +206,10 @@ ArrayList 不能像数组这样活着，所以它实现了动态扩容。
 ## Google Guava
 
 [guava api](https://tool.oschina.net/apidocs/apidoc?api=guava)
+
+## fastjson
+
+总结：
+- 如果对象中某个参数的值为空，转换出来的json字符串没有该参数
+- jackson对LocalDateTime当成对象处理
+- fastjson按时间格式进行处理
