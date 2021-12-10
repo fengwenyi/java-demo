@@ -213,3 +213,57 @@ ArrayList 不能像数组这样活着，所以它实现了动态扩容。
 - 如果对象中某个参数的值为空，转换出来的json字符串没有该参数
 - jackson对LocalDateTime当成对象处理
 - fastjson按时间格式进行处理
+
+## logback
+
+Logback是由log4j创始人设计的另一个开源日志组件,官方网站： http://logback.qos.ch。它当前分为下面下个模块：
+
+logback-core：其它两个模块的基础模块
+logback-classic：它是log4j的一个改良版本，同时它完整实现了slf4j API使你可以很方便地更换成其它日志系统如log4j或JDK14 Logging
+logback-access：访问模块与Servlet容器集成提供通过Http来访问日志的功能
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j.version}</version>
+        <scope>compile</scope>
+    </dependency>
+    
+    <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-core</artifactId>
+        <version>${logback.version}</version>
+    </dependency>
+    
+    <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback.version}</version>
+    </dependency>
+</dependencies>
+```
+
+private final static Logger logger = LoggerFactory.getLogger(App.class);
+
+
+## log4j2
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-core</artifactId>
+        <version>${log4j2.version}</version>
+    </dependency>
+    
+    <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-api</artifactId>
+        <version>${log4j2.version}</version>
+    </dependency>
+</dependencies>
+```
+
+private static final Logger logger = LogManager.getLogger(StreamTests.class.getName());

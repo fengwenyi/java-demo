@@ -1,9 +1,10 @@
 package com.fengwenyi.javademo.streamdemo;
 
 import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+//import org.apache.logging.log4j.LogManager;
+//import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -19,14 +20,10 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * 通过Employee的操作例子来学习java 8 stream api
- * @author Erwin Feng
- * @since 2020/5/13
- */
+@Slf4j
 public class StreamTests extends Base {
 
-    private static final Logger logger = LogManager.getLogger(StreamTests.class.getName());
+//    private static final Logger logger = LogManager.getLogger(StreamTests.class.getName());
 
     @Test
     public void data() {
@@ -295,7 +292,7 @@ public class StreamTests extends Base {
         try {
             long sleepTime = employee.getSalary().longValue();
             TimeUnit.MILLISECONDS.sleep(sleepTime);
-            logger.info("employee name: {}", employee.getName());
+            log.info("employee name: {}", employee.getName());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
