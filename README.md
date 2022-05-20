@@ -7,7 +7,7 @@
 ## jdk 8
 
 - [StreamTests](./src/main/java/com/fengwenyi/javademo/streamdemo/StreamTests.java)：Stream 流的使用示例
-- [LocalDateTimeTests](./src/main/java/com/fengwenyi/javademo/localdatetimedemo/LocalDateTimeTests.java)：LocalDateTime 使用示例
+- [LocalDateTimeTests](./src/main/java/com/fengwenyi/javademo/javatime/LocalDateTimeTests.java)：LocalDateTime 使用示例
   
 ## 并发
 

@@ -1,4 +1,4 @@
-package com.fengwenyi.javademo.localdatetimedemo;
+package com.fengwenyi.javademo.javatime;
 
 import org.junit.Test;
 

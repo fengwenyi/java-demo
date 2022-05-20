@@ -1,6 +1,5 @@
 package com.fengwenyi.javademo.fastjsondemo;
 
-import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -10,8 +9,6 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
-import com.fengwenyi.javademo.localdatetimedemo.LocalDateTimeTests;
-import com.fengwenyi.javalib.convert.JsonUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
