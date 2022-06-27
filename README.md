@@ -267,3 +267,9 @@ private final static Logger logger = LoggerFactory.getLogger(App.class);
 ```
 
 private static final Logger logger = LogManager.getLogger(StreamTests.class.getName());
+
+SPI
+
+- jdk spi
+- dubbo spi
+- spring spi

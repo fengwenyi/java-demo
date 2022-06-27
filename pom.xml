@@ -120,6 +120,15 @@
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
         </dependency>
+
+        <!--
+        这个类引入了 spring bean 所以Spring spi 就无须再引入Spring相关的包了
+        -->
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>3.0.8</version>
+        </dependency>
     </dependencies>
 
     <build>

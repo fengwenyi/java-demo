@@ -1,0 +1,3 @@
+#??namespaceUri????handler
+http\://www.mysql.org/schema/mysql=com.fengwenyi.javademo.spi.sping.MySQLDatabaseHandler
+http\://www.oracle.org/schema/oracle=com.fengwenyi.javademo.spi.sping.OracleDatabaseHandler

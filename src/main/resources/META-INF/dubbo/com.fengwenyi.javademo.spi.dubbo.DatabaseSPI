@@ -1,0 +1,3 @@
+# 扩展实例名称=扩展点实现类
+mysql = com.fengwenyi.javademo.spi.dubbo.impl.MySQLDatabaseSPIImpl
+oracle = com.fengwenyi.javademo.spi.dubbo.impl.OracleDatabaseSPIImpl
