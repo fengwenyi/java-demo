@@ -3,9 +3,14 @@ package com.fengwenyi.javademo.string;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.text.StringSubstitutor;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.common.TemplateParserContext;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,21 +34,33 @@ public class StringTest {
     }
 
     @Test
-    public void testStringTemplateRepl() {
-
+    public void testStringTemplateByPattern() {
+        String pattern = "/{{(.*?)}}/g";
+        String smsTemplate = "验证码:{{code}}，您正在登录管理后台，5分钟内输入有效。";
+        // Pattern.matches(smsTemplate, pattern);
     }
 
-    private void s(String content, Map<String, Object> map) {
-        String template = "";
-        // template.replaceAll("/{{(.*?)}}/g", )
+    @Test
+    public void testStringTemplateBySpring() {
+        String smsTemplate = "验证码:#{[code]}，您正在登录管理后台，5分钟内输入有效。";
+        Map<String, Object> params = new HashMap<>();
+        params.put("code", 1234);
+
+        ExpressionParser parser = new SpelExpressionParser();
+        TemplateParserContext parserContext = new TemplateParserContext();
+        String content = parser.parseExpression(smsTemplate, parserContext).getValue(params, String.class);
+
+        System.out.println(content);
     }
 
-    private void testPattern() {
-        String p = "/{{(.*?)}}/g";
-        Pattern pattern = Pattern.compile(p);
-        String content = "";
-        Matcher matcher = pattern.matcher(content);
-        matcher.matches();
+    @Test
+    public void testStringTemplateByApache() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("code", 1234);
+        String smsTemplate = "验证码:${code}，您正在登录管理后台，5分钟内输入有效。";
+        StringSubstitutor sub = new StringSubstitutor(params);
+        String content= sub.replace(smsTemplate);
+        System.out.println(content);
     }
 
 }
