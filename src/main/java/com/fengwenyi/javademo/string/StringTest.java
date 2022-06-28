@@ -35,14 +35,16 @@ public class StringTest {
 
     @Test
     public void testStringTemplateByPattern() {
-        String pattern = "/{{(.*?)}}/g";
-        String smsTemplate = "验证码:{{code}}，您正在登录管理后台，5分钟内输入有效。";
-        // Pattern.matches(smsTemplate, pattern);
+//        String pattern = "/{{(.*?)}}/g";
+//        String smsTemplate = "验证码:{{code}}，您正在登录管理后台，5分钟内输入有效。";
+//        boolean matches = Pattern.matches(pattern, smsTemplate);
+//        log.info("[{}]", matches);
     }
 
     @Test
     public void testStringTemplateBySpring() {
         String smsTemplate = "验证码:#{[code]}，您正在登录管理后台，5分钟内输入有效。";
+        // String smsTemplate = "验证码:${[code]}，您正在登录管理后台，5分钟内输入有效。";
         Map<String, Object> params = new HashMap<>();
         params.put("code", 1234);
 
