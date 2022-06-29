@@ -1,5 +1,6 @@
 package com.fengwenyi.javademo.mapdemo;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -10,7 +11,7 @@ import java.util.Map;
  */
 public class MapTraverseDemo {
 
-    private static final Map<Object, Object> init = Map.of(
+    private static final Map<Object, Object> init = new HashMap<>(); /*Map.of(
             "a", 1,
             "b", 2,
             "c", 3,
@@ -18,7 +19,11 @@ public class MapTraverseDemo {
             "e", 5,
             "f", 6,
             "g", 7
-    );
+    );*/
+
+    static {
+        init.put("", "");
+    }
 
     private static void foreach1(Map<Object, Object> map) {
         for (Iterator<Map.Entry<Object, Object>> it = map.entrySet().iterator(); it.hasNext();) {
@@ -48,7 +53,7 @@ public class MapTraverseDemo {
     }
 
     public static void main(String[] args) {
-        var map = init;
+        Map<Object, Object> map = init;
         foreach1(map);
         System.out.println();
         foreach2(map);

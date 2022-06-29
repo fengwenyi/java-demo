@@ -30,7 +30,7 @@ public class TemplateModel {
     public String convert(String content) {
         String paramsStr = JSON.toJSONString(this);
         log.info(paramsStr);
-        Map<String, Object> paramsMap = JSON.parseObject(paramsStr, new TypeReference<>() {});
+        Map<String, Object> paramsMap = JSON.parseObject(paramsStr, new TypeReference<Map<String, Object>>() {});
         for (String key : paramsMap.keySet()) {
             if (StringUtils.isNotEmpty(key) && content.contains(key)) {
                 Object value = paramsMap.get(key);

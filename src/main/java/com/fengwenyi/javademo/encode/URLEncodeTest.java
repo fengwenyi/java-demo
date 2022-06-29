@@ -16,8 +16,8 @@ public class URLEncodeTest {
     @Test
     public void test() {
         String url = "";
-        String urlEncode = URLEncoder.encode(url, StandardCharsets.UTF_8);
-        log.info("url encode: [{}]", urlEncode);
+//        String urlEncode = URLEncoder.encode(url, StandardCharsets.UTF_8);
+//        log.info("url encode: [{}]", urlEncode);
     }
 
 }
