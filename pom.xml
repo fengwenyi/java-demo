@@ -13,7 +13,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <java.version>1.8</java.version>
         <log4j2.version>2.14.1</log4j2.version>
-        <JavaLib.version>2.1.4</JavaLib.version>
+        <JavaLib.version>2.1.7</JavaLib.version>
         <okhttp3.version>4.9.2</okhttp3.version>
         <guava.version>31.0.1-jre</guava.version>
         <fastjson.version>1.2.78</fastjson.version>
