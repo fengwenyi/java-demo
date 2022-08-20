@@ -1,11 +1,14 @@
 package com.fengwenyi.javademo.lambda;
 
+import com.fengwenyi.javalib.convert.JsonUtils;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,19 +39,34 @@ public class ForTest {
         for (int x = 0; x < userEntityList.size(); x++) {
             voList.add(entityForVo(userEntityList.get(x)));
         }
+        Collections.sort(voList, new Comparator<UserVo>() {
+            @Override
+            public int compare(UserVo o1, UserVo o2) {
+                return Integer.compare(Integer.parseInt(o2.id), Integer.parseInt(o1.id));
+            }
+        });
+        // voList.sort((o1, o2) -> Integer.compare(Integer.parseInt(o2.id), Integer.parseInt(o1.id)));
         log.info("for test finished, size: [{}], time: [{}]ms",
                 voList.size(), System.currentTimeMillis() - startTime);
         // for test finished, size: [1000000], time: [222]ms
+        //List<String> ids = voList.stream().map(UserVo::getId).collect(Collectors.toList());
+        //log.info(JsonUtils.convertString(ids));
     }
 
     @Test
     public void testForLambda() {
         long startTime = System.currentTimeMillis();
         List<UserEntity> userEntityList = init();
-        List<UserVo> voList = userEntityList.stream().map(this::entityForVo).collect(Collectors.toList());
+        List<UserVo> voList = userEntityList
+                .stream()
+                .map(this::entityForVo)
+                .sorted(Comparator.comparing(UserVo::getId).reversed())
+                .collect(Collectors.toList());
         log.info("for lambda test finished, size: [{}], time: [{}]ms",
                 voList.size(), System.currentTimeMillis() - startTime);
         // for lambda test finished, size: [1000000], time: [231]ms
+//        List<String> ids = voList.stream().map(UserVo::getId).collect(Collectors.toList());
+//        log.info(JsonUtils.convertString(ids));
     }
 
     @Test
@@ -67,9 +85,9 @@ public class ForTest {
     @Test
     public void testTen() {
         for (int i = 0; i < 10; i++) {
-            // testFor();
+             testFor();
             // testForEach();
-            // testForLambda();
+//             testForLambda();
         }
     }
 
