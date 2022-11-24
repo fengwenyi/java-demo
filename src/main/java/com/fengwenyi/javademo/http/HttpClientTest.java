@@ -19,6 +19,7 @@ public class HttpClientTest {
     @Test
     public void test() throws IOException {
         URL url = new URL("https://www.baidu.com");
+//        URL url = new URL("https://erwin-api.fengwenyi.com/erwin/bookmark/page?currentPage=1&pageSize=10");
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setRequestMethod("GET");
         httpURLConnection.setRequestProperty("Content-Type", "application/json");

@@ -17,15 +17,27 @@ public class Request {
 
     private String url;
 
-    private String method;
+    private Method method;
 
     private String param;
+
+    private Util util = Util.JDK;
 
     public enum Method {
         GET, POST, PUT, PATCH, DELETE
     }
 
-    public static Request create(String url, String method, String param) {
+    public enum Util {
+        JDK, OkHttp, AsyncHttpClient
+    }
+
+    public enum LogLevel {
+
+        DEBUG, INFO, ERROR
+
+    }
+
+    public static Request create(String url, Method method, String param) {
         Request request = new Request();
         request.setUrl(url);
         request.setMethod(method);
@@ -41,6 +53,8 @@ public class Request {
         private Map<String, String> headers = new HashMap<>();
         private SSLSocketFactory sslContextFactory;
         private HostnameVerifier hostnameVerifier;
+        /** 日志级别 */
+        private LogLevel logLevel;
 
         public static Option create(Integer connectTimeout, Integer readTimeout) {
             Option option = new Option();
