@@ -1,5 +1,6 @@
 package com.fengwenyi.javademo.okhttp;
 
+import com.fengwenyi.javalib.file.FileUtils;
 import okhttp3.*;
 
 import javax.net.ssl.HostnameVerifier;
@@ -30,7 +31,7 @@ public class DownloadUtils {
 //        okHttpClient = new OkHttpClient();
         okHttpClient = new OkHttpClient.Builder()
                 .retryOnConnectionFailure(true)
-                .connectTimeout(180, TimeUnit.SECONDS) //连接超时
+                .connectTimeout(5, TimeUnit.SECONDS) //连接超时
                 .readTimeout(180, TimeUnit.SECONDS) //读取超时
                 .writeTimeout(180, TimeUnit.SECONDS) //写超时
 //                .addInterceptor(new CommonHeaderInterceptor())
@@ -93,6 +94,11 @@ public class DownloadUtils {
                     dir.mkdirs();
                 }
                 File file = new File(dir, destFileName);
+                if (file.exists()) {
+                    System.out.println("警告：文件已存在，新下载的文件将被重命名！");
+                    String fileNameTemp = destFileName.substring(0, destFileName.lastIndexOf("."));
+                    file = new File(dir, fileNameTemp + "_" + System.currentTimeMillis() + "." + FileUtils.getSuffix(destFileName));
+                }
 
                 try {
 
