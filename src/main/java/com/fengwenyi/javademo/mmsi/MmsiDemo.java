@@ -105,14 +105,33 @@ public class MmsiDemo {
     private static void writeResultCsv(List<MmsiBo> resultList) {
         List<String> titleList = new ArrayList<>();
         titleList.add("MMSI");
-        titleList.add("LON");
-        titleList.add("LAT");
+        titleList.add("Time");
+        titleList.add("Lon");
+        titleList.add("Lat");
+        titleList.add("Speed");
+        titleList.add("Course");
+        titleList.add("Length");
+        titleList.add("Name");
+        titleList.add("NavigationStatus");
+        titleList.add("Type");
+        titleList.add("ArriveTime");
+        titleList.add("Destination");
         List<String[]> dataList = new ArrayList<>();
         for (MmsiBo mmsiBo : resultList) {
             String [] data = new String[] {
                     mmsiBo.getMmsi(),
-                    mmsiBo.getLon().toString(),
-                    mmsiBo.getLat().toString()
+                    mmsiBo.getTimestamp() + "",
+                    mmsiBo.getLon() + "",
+                    mmsiBo.getLat() + "",
+                    mmsiBo.getSpend() + "",
+                    mmsiBo.getCourse() + "",
+                    mmsiBo.getCourse() + "",
+                    mmsiBo.getLength(),
+                    mmsiBo.getName(),
+                    mmsiBo.getNavigationStatus(),
+                    mmsiBo.getType(),
+                    mmsiBo.getArriveTime(),
+                    mmsiBo.getDestination(),
             };
             dataList.add(data);
         }
@@ -178,6 +197,10 @@ public class MmsiDemo {
                 mmsiBo.setCourse(Float.parseFloat(columns[6]));
                 mmsiBo.setLength(columns[7]);
                 mmsiBo.setName(columns[8]);
+                mmsiBo.setNavigationStatus(columns[9]);
+                mmsiBo.setType(columns[10]);
+                mmsiBo.setArriveTime(columns[11]);
+                mmsiBo.setDestination(columns[12]);
                 list.add(mmsiBo);
             }
         } catch (IOException ex) {
@@ -221,10 +244,10 @@ public class MmsiDemo {
         private Float course;
         private String length;
         private String name;
-        private String navigate;
+        private String navigationStatus;
         private String type;
-        private String arriveType;
-        private String destinate;
+        private String arriveTime;
+        private String destination;
 
 
         public String getMmsi() {
@@ -291,36 +314,12 @@ public class MmsiDemo {
             this.name = name;
         }
 
-        public String getNavigate() {
-            return navigate;
-        }
-
-        public void setNavigate(String navigate) {
-            this.navigate = navigate;
-        }
-
         public String getType() {
             return type;
         }
 
         public void setType(String type) {
             this.type = type;
-        }
-
-        public String getArriveType() {
-            return arriveType;
-        }
-
-        public void setArriveType(String arriveType) {
-            this.arriveType = arriveType;
-        }
-
-        public String getDestinate() {
-            return destinate;
-        }
-
-        public void setDestinate(String destinate) {
-            this.destinate = destinate;
         }
 
         @Override
@@ -334,12 +333,37 @@ public class MmsiDemo {
                     ", course=" + course +
                     ", length='" + length + '\'' +
                     ", name='" + name + '\'' +
-                    ", navigate='" + navigate + '\'' +
+                    ", navigationStatus='" + navigationStatus + '\'' +
                     ", type='" + type + '\'' +
-                    ", arriveType='" + arriveType + '\'' +
-                    ", destinate='" + destinate + '\'' +
+                    ", arriveTime='" + arriveTime + '\'' +
+                    ", destination='" + destination + '\'' +
                     '}';
         }
+
+        public String getNavigationStatus() {
+            return navigationStatus;
+        }
+
+        public void setNavigationStatus(String navigationStatus) {
+            this.navigationStatus = navigationStatus;
+        }
+
+        public String getArriveTime() {
+            return arriveTime;
+        }
+
+        public void setArriveTime(String arriveTime) {
+            this.arriveTime = arriveTime;
+        }
+
+        public String getDestination() {
+            return destination;
+        }
+
+        public void setDestination(String destination) {
+            this.destination = destination;
+        }
+
     }
 
     private static void writeCsv(String filePath, List<String> titleList, List<String[]> dataList) {
