@@ -20,7 +20,7 @@ public class MmsiDemo {
      *          |          |            ---------- m4
      *          ------------m1          |        |
      *          |          |            |        |
-     *   区域A   |  区域B   |     区域C   |  区域D  |   区域D
+     *   区域A   |  区域B   |     区域C   |  区域D  |   区域E
      *          |          |            |        |
      *          ------------m2          |        |
      *          |          |            ---------- m3
@@ -49,47 +49,47 @@ public class MmsiDemo {
 
         System.out.println("原始数据条数：" + list.size());
 
-        List<MmsiBo> list1 = new ArrayList<>();
-        List<MmsiBo> list2 = new ArrayList<>();
-        List<MmsiBo> list3 = new ArrayList<>();
-        List<MmsiBo> list4 = new ArrayList<>();
-        List<MmsiBo> list5 = new ArrayList<>();
+        List<MmsiBo> listA = new ArrayList<>();
+        List<MmsiBo> listB = new ArrayList<>();
+        List<MmsiBo> listC = new ArrayList<>();
+        List<MmsiBo> listD = new ArrayList<>();
+        List<MmsiBo> listE = new ArrayList<>();
         for (MmsiBo mmsiBo : list) {
 
             float a = mmsiBo.getLon();
             float b = mmsiBo.getLat();
 
             if (judgeRegion01Left(a, b)) {
-                list1.add(mmsiBo);
+                listA.add(mmsiBo);
             } else if (judgeWithinRegion01(a, b)) {
-                list2.add(mmsiBo);
+                listB.add(mmsiBo);
             } else if (judgeRegion01_02(a, b)) {
-                list3.add(mmsiBo);
+                listC.add(mmsiBo);
             } else if (judgeWithinRegion02(a, b)) {
-                list4.add(mmsiBo);
+                listD.add(mmsiBo);
             } else if (judgeRegion02Right(a, b)) {
-                list5.add(mmsiBo);
+                listE.add(mmsiBo);
             } else {
                 System.err.println("警告：该点不再指定的区域！" + mmsiBo);
             }
         }
 
-        System.out.println("最左边==>" + list1.size() + "条");
-        System.out.println("1区域内==>" + list2.size() + "条");
-        System.out.println("1_2区域之间==>" + list3.size() + "条");
-        System.out.println("2区域内==>" + list4.size() + "条");
-        System.out.println("最右边==>" + list5.size() + "条");
+        System.out.println("最左边==>" + listA.size() + "条");
+        System.out.println("1区域内==>" + listB.size() + "条");
+        System.out.println("1_2区域之间==>" + listC.size() + "条");
+        System.out.println("2区域内==>" + listD.size() + "条");
+        System.out.println("最右边==>" + listE.size() + "条");
 
         Set<String> set = new HashSet<>();
         List<MmsiBo> resultList = new ArrayList<>();
 
         for (MmsiBo mmsiBo : list) {
             if (
-                    judgeMmsi(list1, mmsiBo) &&
-                            judgeMmsi(list2, mmsiBo)
-                            && judgeMmsi(list3, mmsiBo)
-                            && judgeMmsi(list4, mmsiBo)
-                            && judgeMmsi(list5, mmsiBo)
+                    judgeMmsi(listA, mmsiBo)
+                            && judgeMmsi(listB, mmsiBo)
+                            && judgeMmsi(listC, mmsiBo)
+                            && judgeMmsi(listD, mmsiBo)
+                            && judgeMmsi(listE, mmsiBo)
             ) {
                 resultList.add(mmsiBo);
                 set.add(mmsiBo.getMmsi());
@@ -171,8 +171,13 @@ public class MmsiDemo {
                 // System.out.println("["+ String.join(", ", columns) +"]");
                 MmsiBo mmsiBo = new MmsiBo();
                 mmsiBo.setMmsi(columns[1]);
+                mmsiBo.setTimestamp(Long.parseLong(columns[2]));
                 mmsiBo.setLon(Float.parseFloat(columns[3]));
                 mmsiBo.setLat(Float.parseFloat(columns[4]));
+                mmsiBo.setSpend(Float.parseFloat(columns[5]));
+                mmsiBo.setCourse(Float.parseFloat(columns[6]));
+                mmsiBo.setLength(columns[7]);
+                mmsiBo.setName(columns[8]);
                 list.add(mmsiBo);
             }
         } catch (IOException ex) {
@@ -211,6 +216,16 @@ public class MmsiDemo {
         private String mmsi;
         private Float lon;
         private Float lat;
+        private Long timestamp;
+        private Float spend;
+        private Float course;
+        private String length;
+        private String name;
+        private String navigate;
+        private String type;
+        private String arriveType;
+        private String destinate;
+
 
         public String getMmsi() {
             return mmsi;
@@ -236,12 +251,93 @@ public class MmsiDemo {
             this.lat = lat;
         }
 
+        public Long getTimestamp() {
+            return timestamp;
+        }
+
+        public void setTimestamp(Long timestamp) {
+            this.timestamp = timestamp;
+        }
+
+        public Float getSpend() {
+            return spend;
+        }
+
+        public void setSpend(Float spend) {
+            this.spend = spend;
+        }
+
+        public Float getCourse() {
+            return course;
+        }
+
+        public void setCourse(Float course) {
+            this.course = course;
+        }
+
+        public String getLength() {
+            return length;
+        }
+
+        public void setLength(String length) {
+            this.length = length;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getNavigate() {
+            return navigate;
+        }
+
+        public void setNavigate(String navigate) {
+            this.navigate = navigate;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getArriveType() {
+            return arriveType;
+        }
+
+        public void setArriveType(String arriveType) {
+            this.arriveType = arriveType;
+        }
+
+        public String getDestinate() {
+            return destinate;
+        }
+
+        public void setDestinate(String destinate) {
+            this.destinate = destinate;
+        }
+
         @Override
         public String toString() {
             return "MmsiBo{" +
                     "mmsi='" + mmsi + '\'' +
                     ", lon=" + lon +
                     ", lat=" + lat +
+                    ", timestamp=" + timestamp +
+                    ", spend=" + spend +
+                    ", course=" + course +
+                    ", length='" + length + '\'' +
+                    ", name='" + name + '\'' +
+                    ", navigate='" + navigate + '\'' +
+                    ", type='" + type + '\'' +
+                    ", arriveType='" + arriveType + '\'' +
+                    ", destinate='" + destinate + '\'' +
                     '}';
         }
     }
