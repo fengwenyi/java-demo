@@ -5,6 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author <a href="https://fengwenyi.com">Erwin Feng</a>
@@ -40,7 +42,7 @@ public class MmsiDemo {
     private static  final float n4 = 14;
 
     public static void main(String[] args) {
-        mmsi();
+         mmsi();
     }
 
     private static void mmsi() {
@@ -57,6 +59,9 @@ public class MmsiDemo {
         List<MmsiBo> listC = new ArrayList<>();
         List<MmsiBo> listD = new ArrayList<>();
         List<MmsiBo> listE = new ArrayList<>();
+
+        List<MmsiBo> listOther = new ArrayList<>();
+
         for (MmsiBo mmsiBo : list) {
 
             float a = mmsiBo.getLon();
@@ -73,7 +78,7 @@ public class MmsiDemo {
             } else if (judgeRegion02Right(a, b)) {
                 listE.add(mmsiBo);
             } else {
-                System.err.println("警告：该点不再指定的区域！" + mmsiBo);
+                listOther.add(mmsiBo);
             }
         }
 
@@ -82,11 +87,151 @@ public class MmsiDemo {
         log("C区域(1和2区域之间) ==> " + listC.size() + " 条");
         log("D区域(2区域内)     ==> " + listD.size() + " 条");
         log("E区域(最右边)      ==> " + listE.size() + " 条");
+        log("其他区域           ==> " + listOther.size() + " 条");
 
-        Set<String> set = new HashSet<>();
+        /*Set<String> set = new HashSet<>();
         List<MmsiBo> resultList = new ArrayList<>();
 
-        for (MmsiBo mmsiBo : list) {
+        int sizeA = listA.size();
+        int sizeB = listB.size();
+        int sizeC = listC.size();
+        int sizeD = listD.size();
+        int sizeE = listE.size();
+
+        int min = Math.min(sizeA, sizeB);
+        min = Math.min(min, sizeC);
+        min = Math.min(min, sizeD);
+        min = Math.min(min, sizeE);
+
+        log("区域中最新值是：" + min);
+
+        if (min == sizeA) {
+            log("A区域数最少");
+            for (MmsiBo mmsiBo : listA) {
+                if (judgeMmsi(listB, mmsiBo)
+                        && judgeMmsi(listC, mmsiBo)
+                        && judgeMmsi(listD, mmsiBo)
+                        && judgeMmsi(listE, mmsiBo)) {
+                    resultList.add(mmsiBo);
+                }
+            }
+        } else if (min == sizeB) {
+            log("B区域数最少");
+            for (MmsiBo mmsiBo : listB) {
+                if (judgeMmsi(listA, mmsiBo)
+                        && judgeMmsi(listC, mmsiBo)
+                        && judgeMmsi(listD, mmsiBo)
+                        && judgeMmsi(listE, mmsiBo)) {
+                    resultList.add(mmsiBo);
+                }
+            }
+        } else if (min == sizeC) {
+            log("C区域数最少");
+            for (MmsiBo mmsiBo : listC) {
+                if (judgeMmsi(listB, mmsiBo)
+                        && judgeMmsi(listB, mmsiBo)
+                        && judgeMmsi(listD, mmsiBo)
+                        && judgeMmsi(listE, mmsiBo)) {
+                    resultList.add(mmsiBo);
+                }
+            }
+        } else if (min == sizeD) {
+            log("D区域数最少");
+            for (MmsiBo mmsiBo : listD) {
+                if (judgeMmsi(listB, mmsiBo)
+                        && judgeMmsi(listB, mmsiBo)
+                        && judgeMmsi(listC, mmsiBo)
+                        && judgeMmsi(listE, mmsiBo)) {
+                    resultList.add(mmsiBo);
+                }
+            }
+        } else if (min == sizeE) {
+            log("E区域数最少");
+            for (MmsiBo mmsiBo : listE) {
+                if (judgeMmsi(listB, mmsiBo)
+                        && judgeMmsi(listB, mmsiBo)
+                        && judgeMmsi(listC, mmsiBo)
+                        && judgeMmsi(listD, mmsiBo)) {
+                    resultList.add(mmsiBo);
+                }
+            }
+        }*/
+
+        Set<String> aRegionMmsis = getRegionMmsis(listA);
+        Set<String> bRegionMmsis = getRegionMmsis(listB);
+        Set<String> cRegionMmsis = getRegionMmsis(listC);
+        Set<String> dRegionMmsis = getRegionMmsis(listD);
+        Set<String> eRegionMmsis = getRegionMmsis(listE);
+
+        int aMmsiNum = aRegionMmsis.size();
+        int bMmsiNum = bRegionMmsis.size();
+        int cMmsiNum = cRegionMmsis.size();
+        int dMmsiNum = dRegionMmsis.size();
+        int eMmsiNum = eRegionMmsis.size();
+
+        int mmsiNumMin = Math.min(aMmsiNum, bMmsiNum);
+        mmsiNumMin = Math.min(mmsiNumMin, cMmsiNum);
+        mmsiNumMin = Math.min(mmsiNumMin, dMmsiNum);
+        mmsiNumMin = Math.min(mmsiNumMin, eMmsiNum);
+
+        log("区域中mmsi最新值是：" + mmsiNumMin);
+
+        List<String> mmsiList = new ArrayList<>();
+
+        if (mmsiNumMin == aMmsiNum) {
+            log("A区域数mmsi最少");
+            for (String mmsi : aRegionMmsis) {
+                if (judgeMmsiValue(bRegionMmsis, mmsi)
+                        && judgeMmsiValue(cRegionMmsis, mmsi)
+                        && judgeMmsiValue(dRegionMmsis, mmsi)
+                        && judgeMmsiValue(eRegionMmsis, mmsi)) {
+                    mmsiList.add(mmsi);
+                }
+            }
+        } else if (mmsiNumMin == bMmsiNum) {
+            log("B区域数mmsi最少");
+            for (String mmsi : aRegionMmsis) {
+                if (judgeMmsiValue(aRegionMmsis, mmsi)
+                        && judgeMmsiValue(cRegionMmsis, mmsi)
+                        && judgeMmsiValue(dRegionMmsis, mmsi)
+                        && judgeMmsiValue(eRegionMmsis, mmsi)) {
+                    mmsiList.add(mmsi);
+                }
+            }
+        } else if (mmsiNumMin == cMmsiNum) {
+            log("C区域数mmsi最少");
+            for (String mmsi : cRegionMmsis) {
+                if (judgeMmsiValue(aRegionMmsis, mmsi)
+                        && judgeMmsiValue(bRegionMmsis, mmsi)
+                        && judgeMmsiValue(dRegionMmsis, mmsi)
+                        && judgeMmsiValue(eRegionMmsis, mmsi)) {
+                    mmsiList.add(mmsi);
+                }
+            }
+        } else if (mmsiNumMin == dMmsiNum) {
+            log("D区域数mmsi最少");
+            for (String mmsi : dRegionMmsis) {
+                if (judgeMmsiValue(aRegionMmsis, mmsi)
+                        && judgeMmsiValue(bRegionMmsis, mmsi)
+                        && judgeMmsiValue(cRegionMmsis, mmsi)
+                        && judgeMmsiValue(eRegionMmsis, mmsi)) {
+                    mmsiList.add(mmsi);
+                }
+            }
+        } else if (mmsiNumMin == eMmsiNum) {
+            log("E区域数mmsi最少");
+            for (String mmsi : eRegionMmsis) {
+                if (judgeMmsiValue(aRegionMmsis, mmsi)
+                        && judgeMmsiValue(bRegionMmsis, mmsi)
+                        && judgeMmsiValue(cRegionMmsis, mmsi)
+                        && judgeMmsiValue(dRegionMmsis, mmsi)) {
+                    mmsiList.add(mmsi);
+                }
+            }
+        }
+
+
+        /*for (MmsiBo mmsiBo : list) {
             if (
                     judgeMmsi(listA, mmsiBo)
                             && judgeMmsi(listB, mmsiBo)
@@ -97,16 +242,41 @@ public class MmsiDemo {
                 resultList.add(mmsiBo);
                 set.add(mmsiBo.getMmsi());
             }
-        }
+        }*/
 
         // System.out.println("满足条件的：" + set);
-        if (!resultList.isEmpty()) {
+        /*if (!resultList.isEmpty()) {
             log("满足条件的数据 " + resultList.size() + " 条");
             writeResultCsv(resultList);
             log("结果写入 csv 完成");
         } else {
             log("没有满足条件的数据");
+        }*/
+        log("满足条件的mmsi数量为：" + mmsiList.size() + " 个。分别如下：");
+
+        for (int i = 0; i < mmsiList.size(); i++) {
+            System.out.print(mmsiList.get(i) + "    ");
+            if (i % 5 == 0) {
+                System.out.println();
+            }
         }
+    }
+
+    public static boolean judgeMmsiValue(Set<String> regionMmsis, String mmsi) {
+        for (String s : regionMmsis) {
+            if (mmsi.equals(s)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static Set<String> getRegionMmsis(List<MmsiBo> list) {
+        Set<String> mmsis = new HashSet<>();
+        for (MmsiBo mmsiBo : list) {
+            mmsis.add(mmsiBo.getMmsi());
+        }
+        return mmsis;
     }
 
     private static void writeResultCsv(List<MmsiBo> resultList) {
@@ -168,7 +338,7 @@ public class MmsiDemo {
         List<MmsiBo> list = new ArrayList<>(csvList.size() - 1);
 
         for (int i = 1; i < csvList.size(); i++) {
-            list.add(parseToMmsiBo(csvList.get(i)));
+             list.add(parseToMmsiBoByPattern(csvList.get(i)));
         }
 
         log("csv数据转换完成，共 " + list.size() + " 条");
@@ -177,8 +347,12 @@ public class MmsiDemo {
     }
 
     private static MmsiBo parseToMmsiBo(String line) {
+        System.out.println(line);
         // 分割
         String[] columns = line.split(",");
+//
+//        String[] columns = StringUtils.split(line, ",");
+//        System.out.println(JsonUtils.convertString(columns));
         MmsiBo mmsiBo = new MmsiBo();
         mmsiBo.setMmsi(columns[1]);
         // mmsiBo.setTimestamp(Long.parseLong(columns[2]));
@@ -193,6 +367,33 @@ public class MmsiDemo {
 //            mmsiBo.setArriveTime(columns[11]);
         // mmsiBo.setDestination(columns[12]);
         return mmsiBo;
+    }
+
+    private static MmsiBo parseToMmsiBoByPattern(String line) {
+
+        Pattern pattern = Pattern.compile("(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?)");
+
+        Matcher matcher = pattern.matcher(line);
+
+        if (matcher.find()) {
+
+            MmsiBo mmsiBo = new MmsiBo();
+            mmsiBo.setMmsi(matcher.group(1));
+            // mmsiBo.setTimestamp(Long.parseLong(columns[2]));
+            mmsiBo.setLon(Float.parseFloat(matcher.group(3)));
+            mmsiBo.setLat(Float.parseFloat(matcher.group(4)));
+            mmsiBo.setSpend(Float.parseFloat(matcher.group(5)));
+            mmsiBo.setCourse(Float.parseFloat(matcher.group(6)));
+            mmsiBo.setLength(matcher.group(7));
+            mmsiBo.setName(matcher.group(8));
+            mmsiBo.setNavigationStatus(matcher.group(9));
+            mmsiBo.setType(matcher.group(10));
+//            mmsiBo.setArriveTime(columns[11]);
+            // mmsiBo.setDestination(columns[12]);
+
+            return mmsiBo;
+        }
+        return null;
     }
 
     // 最左边
