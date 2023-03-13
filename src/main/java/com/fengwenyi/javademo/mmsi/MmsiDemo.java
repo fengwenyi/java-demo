@@ -3,6 +3,7 @@ package com.fengwenyi.javademo.mmsi;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -40,19 +41,16 @@ public class MmsiDemo {
 
     public static void main(String[] args) {
         mmsi();
-//        testWriteCsv();
-
     }
 
     private static void mmsi() {
 
-        System.out.println(new Date() + " | 处理开始");
+        log("开始");
 
-        String filePath = "/Users/fengwenyi/data/mmsi/polar_sorted_processed10.csv";
+//        String filePath = "/Users/fengwenyi/data/mmsi/polar_sorted_processed10.csv";
+        String filePath = "d:download/polar_sorted_processed10.csv";
 
         List<MmsiBo> list = readCsv(filePath);
-
-        System.out.println("原始数据条数：" + list.size());
 
         List<MmsiBo> listA = new ArrayList<>();
         List<MmsiBo> listB = new ArrayList<>();
@@ -79,11 +77,11 @@ public class MmsiDemo {
             }
         }
 
-        System.out.println("最左边==>" + listA.size() + "条");
-        System.out.println("1区域内==>" + listB.size() + "条");
-        System.out.println("1_2区域之间==>" + listC.size() + "条");
-        System.out.println("2区域内==>" + listD.size() + "条");
-        System.out.println("最右边==>" + listE.size() + "条");
+        log("A区域(最左边)      ==> " + listA.size() + " 条");
+        log("B区域(1区域内)     ==> " + listB.size() + " 条");
+        log("C区域(1和2区域之间) ==> " + listC.size() + " 条");
+        log("D区域(2区域内)     ==> " + listD.size() + " 条");
+        log("E区域(最右边)      ==> " + listE.size() + " 条");
 
         Set<String> set = new HashSet<>();
         List<MmsiBo> resultList = new ArrayList<>();
@@ -101,9 +99,13 @@ public class MmsiDemo {
             }
         }
 
-        System.out.println("满足条件的：" + set);
+        // System.out.println("满足条件的：" + set);
         if (!resultList.isEmpty()) {
+            log("满足条件的数据 " + resultList.size() + " 条");
             writeResultCsv(resultList);
+            log("结果写入 csv 完成");
+        } else {
+            log("没有满足条件的数据");
         }
     }
 
@@ -143,27 +145,6 @@ public class MmsiDemo {
         writeCsv("d:\\result.csv", titleList, dataList);
     }
 
-    private static void testWriteCsv() {
-        List<String> titleList = new ArrayList<>();
-        titleList.add("MMSI");
-        titleList.add("LON");
-        titleList.add("LAT");
-        List<String[]> dataList = new ArrayList<>();
-        String [] data = new String[] {
-                "1.1",
-                "1.2",
-                "1.3"
-        };
-        dataList.add(data);
-        String [] data2 = new String[] {
-                "2.1",
-                "2.2",
-                "2.3"
-        };
-        dataList.add(data2);
-        writeCsv("/Users/fengwenyi/Temp/mmsi/test.csv", titleList, dataList);
-    }
-
     private static boolean judgeMmsi(List<MmsiBo> list, MmsiBo mmsiBo) {
         for (MmsiBo bo : list) {
             if (bo.getMmsi().equals(mmsiBo.getMmsi())) {
@@ -178,43 +159,40 @@ public class MmsiDemo {
         List<String> csvList = readCsvFile(dataFile);
 
         if (csvList == null || csvList.isEmpty()) {
-            System.err.println(new Date() + " | 读取csv文件为空");
+            System.err.println("读取csv文件为空");
             return new ArrayList<>();
         }
 
-        System.out.println(new Date() + " | 读取csv文件结束，共 " + csvList.size() + " 行");
+        log("读取csv文件结束，共 " + csvList.size() + " 行");
 
-        List<MmsiBo> list = new ArrayList<>();
+        List<MmsiBo> list = new ArrayList<>(csvList.size() - 1);
 
-        int i = 0;
-
-        for (String line : csvList) {
-            if (i == 0) {
-                i++;
-                continue;
-            }
-            System.out.println(line);
-            // 分割
-            String[] columns = line.split(",");
-            MmsiBo mmsiBo = new MmsiBo();
-            mmsiBo.setMmsi(columns[1]);
-            // mmsiBo.setTimestamp(Long.parseLong(columns[2]));
-            mmsiBo.setLon(Float.parseFloat(columns[3]));
-            mmsiBo.setLat(Float.parseFloat(columns[4]));
-            mmsiBo.setSpend(Float.parseFloat(columns[5]));
-            mmsiBo.setCourse(Float.parseFloat(columns[6]));
-            mmsiBo.setLength(columns[7]);
-            mmsiBo.setName(columns[8]);
-            mmsiBo.setNavigationStatus(columns[9]);
-            mmsiBo.setType(columns[10]);
-//            mmsiBo.setArriveTime(columns[11]);
-            // mmsiBo.setDestination(columns[12]);
-            list.add(mmsiBo);
+        for (int i = 1; i < csvList.size(); i++) {
+            list.add(parseToMmsiBo(csvList.get(i)));
         }
 
-        System.out.println(new Date() + " | csv数据转换完成，共 " + list.size() + " 条");
+        log("csv数据转换完成，共 " + list.size() + " 条");
 
         return list;
+    }
+
+    private static MmsiBo parseToMmsiBo(String line) {
+        // 分割
+        String[] columns = line.split(",");
+        MmsiBo mmsiBo = new MmsiBo();
+        mmsiBo.setMmsi(columns[1]);
+        // mmsiBo.setTimestamp(Long.parseLong(columns[2]));
+        mmsiBo.setLon(Float.parseFloat(columns[3]));
+        mmsiBo.setLat(Float.parseFloat(columns[4]));
+        mmsiBo.setSpend(Float.parseFloat(columns[5]));
+        mmsiBo.setCourse(Float.parseFloat(columns[6]));
+        mmsiBo.setLength(columns[7]);
+        mmsiBo.setName(columns[8]);
+        mmsiBo.setNavigationStatus(columns[9]);
+        mmsiBo.setType(columns[10]);
+//            mmsiBo.setArriveTime(columns[11]);
+        // mmsiBo.setDestination(columns[12]);
+        return mmsiBo;
     }
 
     // 最左边
@@ -414,7 +392,7 @@ public class MmsiDemo {
         }
     }
 
-    public static List<String> readCsvFile(String filePath) {
+    private static List<String> readCsvFile(String filePath) {
         // 创建 reader
         try (BufferedReader br = Files.newBufferedReader(Paths.get(filePath))) {
             // 按行读取
@@ -429,6 +407,11 @@ public class MmsiDemo {
             ex.printStackTrace();
         }
         return null;
+    }
+
+    private static void log(String msg) {
+        msg = String.format("%s | %s", LocalDateTime.now(), msg);
+        System.out.println(msg);
     }
 
 }
