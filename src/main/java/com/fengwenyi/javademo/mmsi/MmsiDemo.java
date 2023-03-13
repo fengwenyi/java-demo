@@ -1,13 +1,9 @@
 package com.fengwenyi.javademo.mmsi;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author <a href="https://fengwenyi.com">Erwin Feng</a>
@@ -43,8 +39,13 @@ public class MmsiDemo {
     private static  final float n4 = 14;
 
     public static void main(String[] args) {
+        mmsi();
+//        testWriteCsv();
 
-        List<MmsiBo> list = readCsv();
+    }
+
+    private static void mmsi() {
+        List<MmsiBo> list = readCsv("d:\\data.csv");
 
         System.out.println("原始数据条数：" + list.size());
 
@@ -85,10 +86,10 @@ public class MmsiDemo {
         for (MmsiBo mmsiBo : list) {
             if (
                     judgeMmsi(list1, mmsiBo) &&
-                     judgeMmsi(list2, mmsiBo)
-                    && judgeMmsi(list3, mmsiBo)
-                    && judgeMmsi(list4, mmsiBo)
-                    && judgeMmsi(list5, mmsiBo)
+                            judgeMmsi(list2, mmsiBo)
+                            && judgeMmsi(list3, mmsiBo)
+                            && judgeMmsi(list4, mmsiBo)
+                            && judgeMmsi(list5, mmsiBo)
             ) {
                 resultList.add(mmsiBo);
                 set.add(mmsiBo.getMmsi());
@@ -96,6 +97,47 @@ public class MmsiDemo {
         }
 
         System.out.println("满足条件的：" + set);
+        if (!resultList.isEmpty()) {
+            writeResultCsv(resultList);
+        }
+    }
+
+    private static void writeResultCsv(List<MmsiBo> resultList) {
+        List<String> titleList = new ArrayList<>();
+        titleList.add("MMSI");
+        titleList.add("LON");
+        titleList.add("LAT");
+        List<String[]> dataList = new ArrayList<>();
+        for (MmsiBo mmsiBo : resultList) {
+            String [] data = new String[] {
+                    mmsiBo.getMmsi(),
+                    mmsiBo.getLon().toString(),
+                    mmsiBo.getLat().toString()
+            };
+            dataList.add(data);
+        }
+        writeCsv("d:\\result.csv", titleList, dataList);
+    }
+
+    private static void testWriteCsv() {
+        List<String> titleList = new ArrayList<>();
+        titleList.add("MMSI");
+        titleList.add("LON");
+        titleList.add("LAT");
+        List<String[]> dataList = new ArrayList<>();
+        String [] data = new String[] {
+                "1.1",
+                "1.2",
+                "1.3"
+        };
+        dataList.add(data);
+        String [] data2 = new String[] {
+                "2.1",
+                "2.2",
+                "2.3"
+        };
+        dataList.add(data2);
+        writeCsv("/Users/fengwenyi/Temp/mmsi/test.csv", titleList, dataList);
     }
 
     private static boolean judgeMmsi(List<MmsiBo> list, MmsiBo mmsiBo) {
@@ -107,12 +149,9 @@ public class MmsiDemo {
         return false;
     }
 
-    public static List<MmsiBo> readCsv() {
+    public static List<MmsiBo> readCsv(String dataFile) {
 
         List<MmsiBo> list = new ArrayList<>();
-
-//         String dataFile = "D:\\download\\data.csv";
-        String dataFile = "D:\\download\\polar_sorted_processed10.csv";
 
         // 创建 reader
         try (BufferedReader br = Files.newBufferedReader(Paths.get(dataFile))) {
@@ -165,6 +204,86 @@ public class MmsiDemo {
     // 最右边
     private static boolean judgeRegion02Right(float a, float b) {
         return a > n4;
+    }
+
+
+    static class MmsiBo {
+        private String mmsi;
+        private Float lon;
+        private Float lat;
+
+        public String getMmsi() {
+            return mmsi;
+        }
+
+        public void setMmsi(String mmsi) {
+            this.mmsi = mmsi;
+        }
+
+        public Float getLon() {
+            return lon;
+        }
+
+        public void setLon(Float lon) {
+            this.lon = lon;
+        }
+
+        public Float getLat() {
+            return lat;
+        }
+
+        public void setLat(Float lat) {
+            this.lat = lat;
+        }
+
+        @Override
+        public String toString() {
+            return "MmsiBo{" +
+                    "mmsi='" + mmsi + '\'' +
+                    ", lon=" + lon +
+                    ", lat=" + lat +
+                    '}';
+        }
+    }
+
+    private static void writeCsv(String filePath, List<String> titleList, List<String[]> dataList) {
+        //第一步：设置输出的文件路径
+        //如果该目录下不存在该文件，则文件会被创建到指定目录下。如果该目录有同名文件，那么该文件将被覆盖。
+        File writeFile = new File(filePath);
+
+        try{
+            //第二步：通过BufferedReader类创建一个使用默认大小输出缓冲区的缓冲字符输出流
+            BufferedWriter writeText = new BufferedWriter(new FileWriter(writeFile));
+
+            StringJoiner titleStr = new StringJoiner(",");
+            for (String title : titleList) {
+                titleStr.add(title);
+            }
+
+            // writeText.newLine();    //换行
+            //调用write的方法将字符串写到流中
+            writeText.write(titleStr.toString());
+
+            for (String[] strings : dataList) {
+                writeText.newLine();    //换行
+                StringJoiner data = new StringJoiner(",");
+                for (String d : strings) {
+                    data.add(d);
+                }
+                //调用write的方法将字符串写到流中
+                writeText.write(data.toString());
+            }
+
+            //使用缓冲区的刷新方法将数据刷到目的地中
+            writeText.flush();
+            //关闭缓冲区，缓冲区没有调用系统底层资源，真正调用底层资源的是FileWriter对象，缓冲区仅仅是一个提高效率的作用
+            //因此，此处的close()方法关闭的是被缓存的流对象
+            writeText.close();
+        }catch (FileNotFoundException e){
+            System.out.println("没有找到指定文件");
+        }catch (IOException e) {
+            System.out.println("文件读写出错");
+        }
     }
 
 }
