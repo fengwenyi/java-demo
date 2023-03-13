@@ -3,6 +3,7 @@ package com.fengwenyi.javademo.file;
 import cn.hutool.core.io.FileUtil;
 import com.fengwenyi.javademo.mmsi.MmsiDemo;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.LineIterator;
 import org.junit.Test;
 
 import java.io.*;
@@ -108,8 +109,11 @@ public class FileTests {
 //        List<String> dataList = readFileByGuava(fileName);
         // 读文件耗时9399 毫秒，共 9527047 条数据
 
-        List<String> dataList = readFileByCommonsIo(fileName);
+//        List<String> dataList = readFileByCommonsIo(fileName);
         // 读文件耗时7197 毫秒，共 9527047 条数据
+
+        List<String> dataList = readFileByCommonsIoLineIterator(fileName);
+        // 读文件耗时8058 毫秒，共 9527047 条数据
 
         int total = dataList.size();
 
@@ -176,6 +180,25 @@ public class FileTests {
             return FileUtils.readLines(new File(filePath), StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public List<String> readFileByCommonsIoLineIterator(String filePath) {
+        LineIterator it;
+        try {
+            it = FileUtils.lineIterator(new File(filePath), StandardCharsets.UTF_8.name());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            List<String> list = new ArrayList<>();
+            while (it.hasNext()) {
+                String line = it.nextLine();
+                list.add(line);
+            }
+            return list;
+        } finally {
+            LineIterator.closeQuietly(it);
         }
     }
 
