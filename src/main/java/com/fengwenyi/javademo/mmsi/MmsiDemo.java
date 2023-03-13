@@ -45,7 +45,12 @@ public class MmsiDemo {
     }
 
     private static void mmsi() {
-        List<MmsiBo> list = readCsv("d:\\data.csv");
+
+        System.out.println(new Date() + " | 处理开始");
+
+        String filePath = "/Users/fengwenyi/data/mmsi/polar_sorted_processed10.csv";
+
+        List<MmsiBo> list = readCsv(filePath);
 
         System.out.println("原始数据条数：" + list.size());
 
@@ -170,42 +175,45 @@ public class MmsiDemo {
 
     public static List<MmsiBo> readCsv(String dataFile) {
 
+        List<String> csvList = readCsvFile(dataFile);
+
+        if (csvList == null || csvList.isEmpty()) {
+            System.err.println(new Date() + " | 读取csv文件为空");
+            return new ArrayList<>();
+        }
+
+        System.out.println(new Date() + " | 读取csv文件结束，共 " + csvList.size() + " 行");
+
         List<MmsiBo> list = new ArrayList<>();
 
-        // 创建 reader
-        try (BufferedReader br = Files.newBufferedReader(Paths.get(dataFile))) {
-            // CSV文件的分隔符
-            String DELIMITER = ",";
-            // 按行读取
-            String line;
-            int i = 0;
-            while ((line = br.readLine()) != null) {
-                if (i == 0) {
-                    i++;
-                    continue;
-                }
-                // 分割
-                String[] columns = line.split(DELIMITER);
-                // 打印行
-                // System.out.println("["+ String.join(", ", columns) +"]");
-                MmsiBo mmsiBo = new MmsiBo();
-                mmsiBo.setMmsi(columns[1]);
-                mmsiBo.setTimestamp(Long.parseLong(columns[2]));
-                mmsiBo.setLon(Float.parseFloat(columns[3]));
-                mmsiBo.setLat(Float.parseFloat(columns[4]));
-                mmsiBo.setSpend(Float.parseFloat(columns[5]));
-                mmsiBo.setCourse(Float.parseFloat(columns[6]));
-                mmsiBo.setLength(columns[7]);
-                mmsiBo.setName(columns[8]);
-                mmsiBo.setNavigationStatus(columns[9]);
-                mmsiBo.setType(columns[10]);
-                mmsiBo.setArriveTime(columns[11]);
-                mmsiBo.setDestination(columns[12]);
-                list.add(mmsiBo);
+        int i = 0;
+
+        for (String line : csvList) {
+            if (i == 0) {
+                i++;
+                continue;
             }
-        } catch (IOException ex) {
-            ex.printStackTrace();
+            System.out.println(line);
+            // 分割
+            String[] columns = line.split(",");
+            MmsiBo mmsiBo = new MmsiBo();
+            mmsiBo.setMmsi(columns[1]);
+            // mmsiBo.setTimestamp(Long.parseLong(columns[2]));
+            mmsiBo.setLon(Float.parseFloat(columns[3]));
+            mmsiBo.setLat(Float.parseFloat(columns[4]));
+            mmsiBo.setSpend(Float.parseFloat(columns[5]));
+            mmsiBo.setCourse(Float.parseFloat(columns[6]));
+            mmsiBo.setLength(columns[7]);
+            mmsiBo.setName(columns[8]);
+            mmsiBo.setNavigationStatus(columns[9]);
+            mmsiBo.setType(columns[10]);
+//            mmsiBo.setArriveTime(columns[11]);
+            // mmsiBo.setDestination(columns[12]);
+            list.add(mmsiBo);
         }
+
+        System.out.println(new Date() + " | csv数据转换完成，共 " + list.size() + " 条");
+
         return list;
     }
 
@@ -404,6 +412,23 @@ public class MmsiDemo {
         }catch (IOException e) {
             System.out.println("文件读写出错");
         }
+    }
+
+    public static List<String> readCsvFile(String filePath) {
+        // 创建 reader
+        try (BufferedReader br = Files.newBufferedReader(Paths.get(filePath))) {
+            // 按行读取
+            String line;
+            List<String> list = new ArrayList<>();
+            while ((line = br.readLine()) != null) {
+                list.add(line);
+            }
+            br.close();
+            return list;
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 
 }
