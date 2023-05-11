@@ -1,2 +1,0 @@
-com.fengwenyi.javademo.spi.jdk.impl.MySQLDatabaseSPIImpl
-com.fengwenyi.javademo.spi.jdk.impl.OracleDatabaseSPIImpl
